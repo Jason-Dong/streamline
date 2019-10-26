@@ -1,11 +1,10 @@
 API_KEY = 'NWRhNzc3NTgtN2U2ZC00Mjk5LThkNzItODZlMzM5MzdmYWM'
-API_SECRET = 'NDlkZWY1MTEtM2RkYy00YjJhLWE0NTYtYzgyMmU0NDYwYjc'
 
 import requests
 
 def req(url, **params):
   return requests.get('http://api.napster.com/v2.2' + url,
-                      params={'apikey': 'YTkxZTRhNzAtODdlNy00ZjMzLTg0MWItOTc0NmZmNjU4Yzk4', **params})
+                      params={'apikey': API_KEY, **params})
 
 def tracks(query):
   """All tracks that match a query."""
