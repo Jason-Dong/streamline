@@ -33,19 +33,10 @@ def id_to_isrc(spotify_id):
 def features_from_id(spotify_id):
     return spotify.audio_features(spotify_id)[0]
 
-
-def get_playlist(user, playlist):
-    return spotify.user_playlist_tracks(user, playlist)['items']
-
-
 def isrc_to_facts(isrc):
     track = spotify.track(isrc_to_id(isrc))
     return {'name': track['name'], 'artist': track['artists'][0]['name']}
 
-<<<<<<< Updated upstream
-def get_user_playlists(user_id):
-    return spotify.user_playlists(user_id)
-=======
 def apple_req(url, devkey, key, **kwargs):
     r = requests.get('https://api.music.apple.com' + url,
                      headers={
@@ -102,4 +93,54 @@ def addMoreTracks(url, tracks, devkey, key):
     if 'next' in resp:
         print('adding more more')
         addMoreTracks(resp['next'], tracks, devkey, key)
->>>>>>> Stashed changes
+
+def add_tracks(token, playlist_id, track_ids):
+    if token:
+        sp = spotipy.Spotify(auth=token)
+        sp.trace = False
+        # username = sp.me()
+        # return username
+
+        results = playlist_add_tracks(sp, playlist_id, track_ids)
+        return results
+    else:
+        return "Can't get token"
+
+def get_playlists(token):
+    if token:
+        sp = spotipy.Spotify(auth=token)
+        playlists = sp.current_user_playlists()
+        results = []
+        for playlist in playlists['items']:
+            results.append(playlist['id'])
+        return results
+    else:
+        return "Can't get token"
+
+def get_playlist_tracks(spotipy, playlist_id, limit=100, offset=0):
+    """
+    Get full details of the tracks of a playlist owned by a Spotify user. Link to api doc as of 08/17/2019:
+        - https://developer.spotify.com/documentation/web-api/reference/playlists/get-playlists-tracks/
+    Parameters:
+        - playlist_id: the id of the playlist
+        - limit: maximum number of tracks to return
+        - offset: index of the first track to return
+    """
+    plid = spotipy._get_id('playlist', playlist_id)
+    return spotipy._get("playlists/{}/tracks?limit={}&offset={}".format(plid, limit, offset))
+
+def get_playlist(spotipy, playlist_id):
+    """
+    Get a playlist owned by a spotify user. Link to api doc as of 08/17/2019:
+        - https://developer.spotify.com/documentation/web-api/reference/playlists/get-playlist/
+    Parameters:
+        - playlist_id: the id of the playlist
+    """
+    plid = spotipy._get_id('playlist', playlist_id)
+    return spotipy._get("playlists/{}".format(plid))
+
+def playlist_add_tracks(spotipy, playlist_id, tracks, position=None):
+    plid = spotipy._get_id('playlist', playlist_id)
+    ftracks = [spotipy._get_uri('track', tid) for tid in tracks]
+    return spotipy._post("playlists/%s/tracks" % plid,
+                      payload=ftracks, position=position)
