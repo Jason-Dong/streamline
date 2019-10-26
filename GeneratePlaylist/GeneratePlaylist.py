@@ -61,6 +61,7 @@ knn_genres = KNeighborsClassifier(n_neighbors=3)
 knn_genres.fit(genre_embeddings, genre_index)
 
 def create_playlist(title, num_songs):
+    title = title.lower().replace('/', ' ').replace('-', ' ')
     playlist = []
     title_embedding = np.array(keep_genre([[title]]))
     closest_genres = knn_genres.kneighbors(title_embedding)
