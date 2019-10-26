@@ -40,3 +40,6 @@ def get_playlist(user, playlist):
 def isrc_to_facts(isrc):
     track = spotify.track(isrc_to_id(isrc))
     return {'name': track['name'], 'artist': track['artists'][0]['name']}
+
+def get_user_playlists(user_id):
+    return spotify.user_playlists(user_id)
