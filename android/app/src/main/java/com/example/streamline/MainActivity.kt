@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         // Set the connection parameters
         val builder = AuthenticationRequest.Builder(CLIENT_ID, AuthenticationResponse.Type.TOKEN, REDIRECT_URI)
 
-        builder.setScopes(arrayOf("playlist-read-private", "playlist-modify-private"))
+        builder.setScopes(arrayOf("playlist-read-private", "playlist-read-collaborative", "playlist-modify-private"))
         val request = builder.build()
 
         AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request)
