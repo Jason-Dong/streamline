@@ -1,1 +1,4 @@
 spotipy
+requests
+firebase_admin==3.0.0
+google-cloud-error-reporting==0.32.1

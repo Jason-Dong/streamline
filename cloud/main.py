@@ -1,5 +1,11 @@
-from utils import get_val_from_request, isrc_to_id, id_to_isrc, isrc_to_facts, spotify, features_from_id
+import firebase_admin
+from firebase_admin import credentials, firestore
+import json
 
+from utils import get_val_from_request, isrc_to_id, id_to_isrc, isrc_to_facts, spotify, features_from_id, apple_playlists
+
+default_app = firebase_admin.initialize_app()
+db = firestore.client()
 
 def get_audio_features(request):
     isrc = get_val_from_request(request, 'isrc')
@@ -26,3 +32,8 @@ def get_facts(request):
     if isrc:
         return str(isrc_to_facts(isrc))
     return "Problem with get_facts"
+
+def get_apple_playlists(request):
+    devkey = get_val_from_request(request, 'devkey')
+    userkey = get_val_from_request(request, 'userkey')
+    return json.dumps(list(apple_playlists(devkey, userkey)))
