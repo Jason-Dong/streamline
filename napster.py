@@ -86,3 +86,25 @@ def tag(id):
 
 # Example usage:
 # info(track('isrc'))
+
+
+#### GENRE MAP CODE
+
+for p in playlists():
+    isrcs = appleisrcs(p['tracks'])
+    for i, t in enumerate(isrcs):
+        try:
+            print('.', end='')
+            sys.stdout.flush()
+            #info(track(t))
+            genres = [genre(g)['name'] for g in track(t)['links']['genres']['ids']]
+            for g in genres:
+                if g in genremap:
+                    genremap[g].append(t)
+                else:
+                    genremap[g] = [t]
+            #print()
+        except:
+            print('Could not find track', p['tracks'][i]['name'])
+#print(list(playlists()))
+print(json.dumps(genremap))
