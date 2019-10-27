@@ -144,3 +144,12 @@ def playlist_add_tracks(spotipy, playlist_id, tracks, position=None):
     ftracks = [spotipy._get_uri('track', tid) for tid in tracks]
     return spotipy._post("playlists/%s/tracks" % plid,
                       payload=ftracks, position=position)
+
+def add_playlist(allsongs, tracks, token, playlist_id):
+    allsongs = {
+        **allsongs,
+        **tracks
+    }
+    compressed = compress(allsongs)
+    track_ids = [id for id in compressed]
+    add_tracks(token, playlist_id, track_ids)
